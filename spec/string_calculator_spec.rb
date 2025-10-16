@@ -11,4 +11,11 @@ RSpec.describe StringCalculator do
     expect { StringCalculator.add(nil) }
       .to raise_error(ArgumentError, "argument cannot be nil")
   end
+
+  it "raises ArgumentError when argument is not a String" do
+    expect { StringCalculator.add(123) }
+      .to raise_error(ArgumentError, "argument must be a String")
+    expect { StringCalculator.add([1, 2, 3]) }
+      .to raise_error(ArgumentError, "argument must be a String")
+  end
 end
