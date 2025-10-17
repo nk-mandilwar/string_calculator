@@ -21,5 +21,9 @@ RSpec.describe StringCalculator do
     it "returns the same number when argument string contain single number" do
       expect(StringCalculator.add("50")).to eq(50)
     end
+
+    it "returns the sum of comma separated numbers given in the argument" do
+      expect(StringCalculator.add("50,10")).to eq(60)
+    end
   end
 end
