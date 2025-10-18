@@ -4,6 +4,13 @@ class StringCalculator
     raise ArgumentError, "argument must be a String" unless numbers.is_a?(String)
     return 0 if numbers.empty?
 
-    numbers.split(/,|\n/).map(&:to_i).sum
+    delimiter = /,|\n/
+    if numbers.start_with?("//")
+      header, numbers = numbers.split("\n", 2)
+      custom = header[2]
+      delimiter = Regexp.new(Regexp.escape(custom))
+    end
+
+    numbers.split(delimiter).map(&:to_i).sum
   end
 end
