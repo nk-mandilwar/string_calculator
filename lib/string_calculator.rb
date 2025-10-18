@@ -7,12 +7,13 @@ class StringCalculator
     delimiter = /,|\n/
     if numbers.start_with?("//")
       header, numbers = numbers.split("\n", 2)
-      custom = if header.start_with?("//[") && header.end_with?("]")
-        header[3..-2]
+      if header.match(%r{//\[(.+)\]})
+        delimiters = header.scan(%r{\[(.*?)\]}).flatten.map { |d| Regexp.escape(d) }
+        delimiter = Regexp.new(delimiters.join("|"))
       else
-        header[2]
+        custom = header[2..]
+        delimiter = Regexp.new(Regexp.escape(custom))
       end
-      delimiter = Regexp.new(Regexp.escape(custom))
     end
 
     nums = numbers.split(delimiter).map(&:to_i)
