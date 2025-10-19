@@ -66,5 +66,11 @@ RSpec.describe StringCalculator do
     it "raises error when invalid symbol appears with multi-character delimiter" do
       expect { StringCalculator.add("//[***]\n1***2,3") }.to raise_error(ArgumentError, "input contains invalid characters")
     end
+
+    it "raises an error if '-' is used as a delimiter" do
+      expect {
+        StringCalculator.add("//[-]\n1-2-3")
+      }.to raise_error(ArgumentError, "invalid delimiter: '-' cannot be used as it conflicts with negative numbers")
+    end
   end
 end
