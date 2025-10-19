@@ -72,5 +72,9 @@ RSpec.describe StringCalculator do
         StringCalculator.add("//[-]\n1-2-3")
       }.to raise_error(ArgumentError, "invalid delimiter: '-' cannot be used as it conflicts with negative numbers")
     end
+
+    it "returns the sum of comma separated numbers even if spaces are present" do
+      expect(StringCalculator.add("50, 10, 80 ")).to eq(140)
+    end
   end
 end
