@@ -45,7 +45,7 @@ class StringCalculator
 
   def self.validate_allowed_characters(numbers, delimiter)
     # Build a pattern that allows only digits, minus and valid delimiters
-    allowed_pattern = /\A[\d#{delimiter.source}-]+\z/
+    allowed_pattern = /\A[\d\s#{delimiter.source}-]+\z/
 
     unless numbers.match?(allowed_pattern)
       raise ArgumentError, "input contains invalid characters"
@@ -53,7 +53,7 @@ class StringCalculator
   end
 
   def self.parse_numbers(numbers, delimiter)
-    numbers.split(delimiter).map(&:to_i)
+    numbers.split(delimiter).map { |n| n.strip.to_i }
   end
 
   def self.check_for_negatives(nums)
