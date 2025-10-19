@@ -4,11 +4,12 @@ class StringCalculator
     return 0 if numbers.empty?
 
     delimiter, numbers = extract_delimiter(numbers)
-    validate_allowed_characters(numbers, delimiter)
 
-    nums = parse_numbers(numbers, delimiter)
+    tokens = numbers.split(delimiter).map(&:strip)
+    validate_tokens!(tokens)
+
+    nums = tokens.map(&:to_i)
     check_for_negatives(nums)
-
     nums.reject { |n| n > 1000 }.sum
   end
 
@@ -21,12 +22,10 @@ class StringCalculator
 
   def self.extract_delimiter(numbers)
     default_delimiter = /,|\n/
-
     return [default_delimiter, numbers] unless numbers.start_with?("//")
 
     header, numbers = numbers.split("\n", 2)
-    delimiter = parse_header_delimiter(header)
-    [delimiter, numbers]
+    [parse_header_delimiter(header), numbers]
   end
 
   def self.parse_header_delimiter(header)
@@ -38,25 +37,18 @@ class StringCalculator
       delimiters = header.scan(%r{\[(.*?)\]}).flatten.map { |d| Regexp.escape(d) }
       Regexp.new(delimiters.join("|"))
     else
-      custom = header[2..]
-      Regexp.new(Regexp.escape(custom))
+      Regexp.new(Regexp.escape(header[2]))
     end
   end
 
-  def self.validate_allowed_characters(numbers, delimiter)
-    # Split by delimiter, strip spaces, and ensure each token is a valid integer
-    tokens = numbers.split(delimiter).map(&:strip)
+  def self.validate_tokens!(tokens)
     unless tokens.all? { |t| t.match?(/\A-?\d+\z/) }
       raise ArgumentError, "input contains invalid characters or partial delimiters"
     end
   end
 
-  def self.parse_numbers(numbers, delimiter)
-    numbers.split(delimiter).map { |n| n.strip.to_i }
-  end
-
   def self.check_for_negatives(nums)
-    negatives = nums.select { |n| n < 0 }
+    negatives = nums.select(&:negative?)
     raise "negatives not allowed: #{negatives.join(', ')}" if negatives.any?
   end
 end
