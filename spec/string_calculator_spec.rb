@@ -56,15 +56,15 @@ RSpec.describe StringCalculator do
     end
 
     it "raises error when input contains invalid characters" do
-      expect { StringCalculator.add("1,a,3") }.to raise_error(ArgumentError, "input contains invalid characters")
+      expect { StringCalculator.add("1,a,3") }.to raise_error(ArgumentError, "input contains invalid characters or partial delimiters")
     end
 
     it "raises error for invalid characters even with custom delimiter" do
-      expect { StringCalculator.add("//;\n1;2;x") }.to raise_error(ArgumentError, "input contains invalid characters")
+      expect { StringCalculator.add("//;\n1;2;x") }.to raise_error(ArgumentError, "input contains invalid characters or partial delimiters")
     end
 
     it "raises error when invalid symbol appears with multi-character delimiter" do
-      expect { StringCalculator.add("//[***]\n1***2,3") }.to raise_error(ArgumentError, "input contains invalid characters")
+      expect { StringCalculator.add("//[***]\n1***2,3") }.to raise_error(ArgumentError, "input contains invalid characters or partial delimiters")
     end
 
     it "raises an error if '-' is used as a delimiter" do
@@ -79,6 +79,12 @@ RSpec.describe StringCalculator do
 
     it "allows space to be used as delimiter" do
       expect(StringCalculator.add("// \n1 2")).to eq(3)
+    end
+
+    it "raises an error when partial multi-character delimiter is used" do
+      expect {
+        StringCalculator.add("//[***]\n1**2***3")
+      }.to raise_error(ArgumentError, "input contains invalid characters or partial delimiters")
     end
   end
 end
