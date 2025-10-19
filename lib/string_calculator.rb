@@ -4,8 +4,9 @@ class StringCalculator
     return 0 if numbers.empty?
 
     delimiter, numbers = extract_delimiter(numbers)
-    nums = parse_numbers(numbers, delimiter)
+    validate_allowed_characters(numbers, delimiter)
 
+    nums = parse_numbers(numbers, delimiter)
     check_for_negatives(nums)
 
     nums.reject { |n| n > 1000 }.sum
@@ -35,6 +36,15 @@ class StringCalculator
     else
       custom = header[2..]
       Regexp.new(Regexp.escape(custom))
+    end
+  end
+
+  def self.validate_allowed_characters(numbers, delimiter)
+    # Build a pattern that allows only digits, minus and valid delimiters
+    allowed_pattern = /\A[\d#{delimiter.source}-]+\z/
+
+    unless numbers.match?(allowed_pattern)
+      raise ArgumentError, "input contains invalid characters"
     end
   end
 
