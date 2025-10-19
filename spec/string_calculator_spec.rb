@@ -76,5 +76,9 @@ RSpec.describe StringCalculator do
     it "returns the sum of comma separated numbers even if spaces are present" do
       expect(StringCalculator.add("50, 10, 80 ")).to eq(140)
     end
+
+    it "allows space to be used as delimiter" do
+      expect(StringCalculator.add("// \n1 2")).to eq(3)
+    end
   end
 end
