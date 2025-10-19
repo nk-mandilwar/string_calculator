@@ -44,11 +44,10 @@ class StringCalculator
   end
 
   def self.validate_allowed_characters(numbers, delimiter)
-    # Build a pattern that allows only digits, minus and valid delimiters
-    allowed_pattern = /\A[\d\s#{delimiter.source}-]+\z/
-
-    unless numbers.match?(allowed_pattern)
-      raise ArgumentError, "input contains invalid characters"
+    # Split by delimiter, strip spaces, and ensure each token is a valid integer
+    tokens = numbers.split(delimiter).map(&:strip)
+    unless tokens.all? { |t| t.match?(/\A-?\d+\z/) }
+      raise ArgumentError, "input contains invalid characters or partial delimiters"
     end
   end
 
