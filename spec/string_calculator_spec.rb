@@ -54,5 +54,17 @@ RSpec.describe StringCalculator do
     it "supports multiple delimiters of variable length" do
       expect(StringCalculator.add("//[***][%%]\n1***2%%3")).to eq(6)
     end
+
+    it "raises error when input contains invalid characters" do
+      expect { StringCalculator.add("1,a,3") }.to raise_error(ArgumentError, "input contains invalid characters")
+    end
+
+    it "raises error for invalid characters even with custom delimiter" do
+      expect { StringCalculator.add("//;\n1;2;x") }.to raise_error(ArgumentError, "input contains invalid characters")
+    end
+
+    it "raises error when invalid symbol appears with multi-character delimiter" do
+      expect { StringCalculator.add("//[***]\n1***2,3") }.to raise_error(ArgumentError, "input contains invalid characters")
+    end
   end
 end
