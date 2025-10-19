@@ -30,6 +30,10 @@ class StringCalculator
   end
 
   def self.parse_header_delimiter(header)
+    if header.include?("-")
+      raise ArgumentError, "invalid delimiter: '-' cannot be used as it conflicts with negative numbers"
+    end
+
     if header.match(%r{//\[(.+)\]})
       delimiters = header.scan(%r{\[(.*?)\]}).flatten.map { |d| Regexp.escape(d) }
       Regexp.new(delimiters.join("|"))
