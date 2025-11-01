@@ -48,11 +48,11 @@ RSpec.describe StringCalculator do
     end
 
     it "supports multiple delimiters" do
-      expect(StringCalculator.add("//[*][%]\n1*2%3")).to eq(6)
+      expect(StringCalculator.add("//[&][%]\n1&2%3")).to eq(6)
     end
 
     it "supports multiple delimiters of variable length" do
-      expect(StringCalculator.add("//[***][%%]\n1***2%%3")).to eq(6)
+      expect(StringCalculator.add("//[&&&][%%]\n1&&&2%%3")).to eq(6)
     end
 
     it "raises error when input contains invalid characters" do
@@ -85,6 +85,20 @@ RSpec.describe StringCalculator do
       expect {
         StringCalculator.add("//[***]\n1**2***3")
       }.to raise_error(ArgumentError, "input contains invalid characters or partial delimiters")
+    end
+
+    context 'when "*" delimiter is used' do
+      it 'multiplies the numbers when only "*" delimiter is present' do
+        expect(described_class.add("//*\n2*3*4")).to eq(24)
+      end
+
+      it "multiplies if * delimiters of variable length" do
+        expect(StringCalculator.add("//[***]\n1***2***5")).to eq(10)
+      end
+
+      it "multiplies when * delimiters of any length and sum for other delimiters" do
+        expect(StringCalculator.add("//[***][%%]\n2***3%%4")).to eq(10)
+      end
     end
   end
 end
