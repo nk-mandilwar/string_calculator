@@ -16,7 +16,7 @@ class StringCalculator
       values.reject! { |n| n > 1000 }
 
       # Multiply only if *-delimiters exclusively used, else sum
-      if delimiters.all? { |d| d.include?('*') }
+      if delimiters.any? { |d| d.include?('*') }
         multiply_then_sum(numbers, delimiters)
       else
         values.sum
